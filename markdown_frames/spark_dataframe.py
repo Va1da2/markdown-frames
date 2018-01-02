@@ -35,9 +35,14 @@ def _make_columns(row_string):
 
 def _make_table(markdown_table):
     """
-    Given markdown table representation produce a 
+    Given markdown table produce a list of lists - table. Still strings.
+    :param markdown_table: table in markdown format
+    :return: list of lists with rows of data (still in str format)
     """
-    return list(map(_make_columns, markdown_table.split('\n')))
+    table = map(_make_columns, markdown_table.split('\n'))
+    filtered_table = filter(lambda x: x, table)
+
+    return list(filtered_table)
 
 def _get_type(input_type, inp):
     """Return input in desired type.
@@ -84,10 +89,12 @@ def _get_spark_struct(column_names, column_types):
         else:
             return StringType()
 
-    structs = []
-    for column_name, column_type in zip(column_names, column_types):
-        spark_structs.append(StructField(column_name, types_mapping(column_type)))
-    return StructType(spark_structs)
+    def struct_field(name_type):
+        return StructField(name_type[0], types_mapping(name_type[1]))
+
+    spark_structs = map(struct_field, zip(column_names, column_types))
+
+    return StructType(list(spark_structs))
 
 
 def parse_table_to_spark_df(spark, input_table):
