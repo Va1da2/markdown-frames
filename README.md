@@ -32,3 +32,8 @@ input = """
 * add `array` and `map` support
 * dependencies description (how to install pyspark)
 * make it to a package with `setup.py`
+
+
+## Environment setup
+
+Please refer to the manual [here](ENVIRONMENT_SETUP.md)
