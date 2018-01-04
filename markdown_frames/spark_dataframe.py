@@ -1,4 +1,5 @@
 "Function that parse markdown table to Apache Spark (PySpark) DataFrame."
+from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import (
     IntegerType,
     FloatType,
@@ -11,6 +12,8 @@ from pyspark.sql.types import (
 )
 
 from itertools import filterfalse
+from typing import List, Union, Any
+from datetime import datetime
 
 
 INTEGER = ['int', 'integer']
@@ -21,7 +24,7 @@ TIMESTAMP = ['timestamp', 'time stamp']
 NULL = ['null', 'none', 'na', 'nan']
 
 
-def _make_columns(row_string):
+def _make_columns(row_string: str) -> List[str]:
     """
     Provided with input string of single table row,
     return a formated values for that row.
@@ -33,7 +36,7 @@ def _make_columns(row_string):
     row_values = filter(lambda s: s.strip() != '', cleaned_row.split('|'))
     return list(map(lambda s: s.strip().lower(), row_values))
 
-def _make_table(markdown_table):
+def _make_table(markdown_table: str) -> List[List[str]]:
     """
     Given markdown table produce a list of lists - table. Still strings.
     :param markdown_table: table in markdown format
@@ -44,15 +47,11 @@ def _make_table(markdown_table):
 
     return list(filtered_table)
 
-def _get_type(input_type, inp):
+def _get_type(inp: str, input_type: str) -> Union[int, float, str, datetime]:
     """Return input in desired type.
-
-    Args:
-        input_type (str): desired data type of input.
-        inp (str): input.
-
-    Returns:
-        The input in desired type.
+    :param input: input value
+    :param input_type: desired data type of input value
+    :returns: input value in desired data type
     """
     if inp not in NULL:
         if input_type in INTEGER or input_type in BIG_INTEGER:
@@ -65,15 +64,14 @@ def _get_type(input_type, inp):
             return str(inp)
 
 
-def _get_spark_struct(column_names, column_types):
-    """Return StructType while constructing spark df.
-
-    Args:
-        column_names (list): column names (parsed from docstring df).
-        columns_types (list): column types (parsed from docstring df).
-
-    Returns:
-        StructType.
+def _get_spark_struct(column_names: List[str],
+                      column_types: List[str]) -> StructType:
+    """
+    Given column names nad column tapes,
+    produces struct type for Spark DataFrame.
+    :param column_names: column names in list
+    :param columns_types: column types in list
+    :returns: StructType.
     """
     def types_mapping(column_type):
         if column_type in INTEGER:
@@ -95,6 +93,37 @@ def _get_spark_struct(column_names, column_types):
     spark_structs = map(struct_field, zip(column_names, column_types))
 
     return StructType(list(spark_structs))
+
+def _get_data_starting_index(table: List[Any]) -> int:
+    """
+    Given markdown table split into list of rows (lists), find a
+    index of list from which data starts. This might be index 2, if 
+    user did not provide separator (e.g. '----') or index 3 if he did.
+    :param table: markdown table representation as list of lists (rows)
+    :return: index of the row where data starts
+    """
+    #check the first element of 3rd row
+    element_3_1 = table[2][0]
+    if element_3_1 == '-' * len(element_3_1):
+        index = 3
+    else:
+        index = 2
+
+    return index
+
+def spark_df(markdown_table: str, spark: SparkSession) -> DataFrame:
+    """
+    Given SparkSessin and markdown representation of your data,
+    function returns a Spark DataFrame with specified types.
+    :param markdown_table: markdown representation of input data.
+    :param spark: SparkSession
+    :return: DataFrame with data and schema specified.
+    """
+    table = _make_table(markdown_table)
+    column_names = table[0]
+    types = table[1]
+    starting_index = _get_data_starting_index(table)
+
 
 
 def parse_table_to_spark_df(spark, input_table):
