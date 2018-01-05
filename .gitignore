@@ -1,2 +1,4 @@
 **.pyc
 **metastore_db/
+**derby.log
+**/.ipynb_checkpoints/
