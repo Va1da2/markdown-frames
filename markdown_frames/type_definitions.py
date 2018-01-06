@@ -4,9 +4,10 @@ STRING = ['str', 'string']
 INTEGER = ['int', 'integer']
 BIG_INTEGER = ['bigint', 'big int', 'big integer']
 FLOAT = ['float']
-DOUBLE = ['double', 'decimal']
+DOUBLE = ['double']
+DECIMAL = ['decimal']
 TIMESTAMP = ['timestamp', 'time stamp']
 NULL = ['null', 'none', 'na', 'nan']
 
 INTS = INTEGER + BIG_INTEGER
-FLOATS = FLOAT + DOUBLE
+FLOATS = FLOAT + DOUBLE + DECIMAL

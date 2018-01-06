@@ -28,10 +28,17 @@ input = """
 
 ## TO DO:
 
-* make initial implementation of markdown table parsing (without `array` or `map`) 
+* ~~make initial implementation of markdown table parsing (without `array` or `map`)~~
+* make tests for those implementations
+    * tests for `utils.py` [+]
+    * tests for `spark_dataframe.py` [+]
+    * tests for `pandas_dataframe.py` [-] 
+* fix `DecimaType`
 * add `array` and `map` support
-* dependencies description (how to install pyspark)
+* check that all Spark data types are accounted for
+* ~~dependencies description (how to install pyspark)~~
 * make it to a package with `setup.py`
+* add PEP8 auto-checker
 
 
 ## Environment setup

@@ -1,9 +1,15 @@
-"Function that parse markdown table to Apache Spark (PySpark) DataFrame."
+"""
+Function that parse markdown table to Apache Spark (PySpark) DataFrame.
+
+Functions provided:
+* spark_df
+"""
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import (
     IntegerType,
     FloatType,
     DoubleType,
+    DecimalType,
     LongType,
     TimestampType,
     StringType,
@@ -15,7 +21,8 @@ from typing import List
 
 from markdown_frames.utils import (
     make_table,
-    get_data_starting_index,
+    get_column_names_types,
+    get_data_from_table,
     get_python_type
     )
 from markdown_frames.type_definitions import (
@@ -24,9 +31,28 @@ from markdown_frames.type_definitions import (
     BIG_INTEGER,
     FLOAT,
     DOUBLE,
+    DECIMAL,
     TIMESTAMP,
     )
 
+
+def spark_df(markdown_table: str, spark: SparkSession) -> DataFrame:
+    """
+    Given SparkSessin and markdown representation of your data,
+    function returns a Spark DataFrame with specified types.
+    :param markdown_table: markdown representation of input data.
+    :param spark: SparkSession
+    :return: DataFrame with data and schema specified.
+    """
+    table = make_table(markdown_table)
+    column_names, types = get_column_names_types(table)
+    table_data = get_data_from_table(table)
+    output_table = []
+    for row in table_data:
+        output_table.append(tuple(map(get_python_type, zip(row, types))))
+    spark_struct = _get_spark_struct(column_names, types)
+
+    return spark.createDataFrame(output_table, spark_struct)
 
 def _get_spark_struct(column_names: List[str],
                       column_types: List[str]) -> StructType:
@@ -44,6 +70,8 @@ def _get_spark_struct(column_names: List[str],
             return FloatType()
         elif column_type in DOUBLE:
             return DoubleType()
+        elif column_type in DECIMAL:
+            return DecimalType(38, 18)
         elif column_type in TIMESTAMP:
             return TimestampType()
         elif column_type in BIG_INTEGER:
@@ -57,22 +85,3 @@ def _get_spark_struct(column_names: List[str],
     spark_structs = map(struct_field, zip(column_names, column_types))
 
     return StructType(list(spark_structs))
-
-def spark_df(markdown_table: str, spark: SparkSession) -> DataFrame:
-    """
-    Given SparkSessin and markdown representation of your data,
-    function returns a Spark DataFrame with specified types.
-    :param markdown_table: markdown representation of input data.
-    :param spark: SparkSession
-    :return: DataFrame with data and schema specified.
-    """
-    table = make_table(markdown_table)
-    column_names = table[0]
-    types = table[1]
-    starting_index = get_data_starting_index(table)
-    output_table = []
-    for row in table[starting_index:]:
-        output_table.append(tuple(map(get_python_type, zip(row, types))))
-    spark_struct = _get_spark_struct(column_names, types)
-
-    return spark.createDataFrame(output_table, spark_struct)

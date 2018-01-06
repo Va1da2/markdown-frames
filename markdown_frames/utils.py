@@ -1,4 +1,12 @@
-"Functions that are used for spark dataframe and pandas dataframe."
+"""
+Functions that are used for spark dataframe and pandas dataframe.
+
+Functions provided:
+* make_table
+* get_column_names_types
+* get_data_from_table
+* get_python_type
+"""
 from typing import List, Any, Optional
 from datetime import datetime
 from ast import literal_eval
@@ -35,6 +43,37 @@ def make_table(markdown_table: str) -> List[List[str]]:
 
     return list(filtered_table)
 
+def get_column_names_types(table: List[List[str]]) -> List[List[str]]:
+    """
+    Given a table in list of lists representation, output the lists for
+    column names and column types.
+    :param table: markdown table representation as list of lists (rows)
+    :return: list of lists representaion of data in provided table 
+    """
+    column_names = table[0]
+    # Check if types are provided?
+    types = table[1]
+
+    return [column_names, types]
+
+def get_data_from_table(table: List[List[str]]) -> List[List[str]]:
+    """
+    Given markdown table split into list of rows (lists), find a
+    index of list from which data starts and return only the data part
+    of table.
+    :param table: markdown table representation as list of lists (rows)
+    :return: index of the row where data starts
+    """
+    # The thing to check is if data is seprated from
+    # column descriptions (name & type) or not by separator (`-`)
+    element_3_1 = table[2][0]
+    if element_3_1 == element_3_1[0] * len(element_3_1):
+        data = table[3:]
+    else:
+        data = table[2:]
+
+    return data
+
 def get_python_type(value_type: List[str]) -> Optional[Any]:
     """
     Guven a tuple of (str(value), type) return a value in correct
@@ -56,20 +95,3 @@ def get_python_type(value_type: List[str]) -> Optional[Any]:
             return literal_eval(value)
     else:
         return None
-
-def get_data_starting_index(table: List[Any]) -> int:
-    """
-    Given markdown table split into list of rows (lists), find a
-    index of list from which data starts. This might be index 2, if 
-    user did not provide separator (e.g. '----') or index 3 if he did.
-    :param table: markdown table representation as list of lists (rows)
-    :return: index of the row where data starts
-    """
-    #check the first element of 3rd row
-    element_3_1 = table[2][0]
-    if element_3_1 == '-' * len(element_3_1):
-        index = 3
-    else:
-        index = 2
-
-    return index
