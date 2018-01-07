@@ -78,3 +78,13 @@ pip install pyspark
 ```
 
 Now you should be able to run PySpark on your local machine.
+
+
+### Jupyter notebook kernels
+
+If you will install pypsark in new conda environment you might get into trouble for jupyter notebook having no access to that environment. Therefore if you will want to test `pyspark` in a notebook, you have to perform a manual kernel addition in you environment:
+```
+source activate myenv
+python -m ipykernel install --user --name myenv --display-name "Python (myenv)"
+```
+more can be found [here](https://ipython.readthedocs.io/en/stable/install/kernel_install.html#kernels-for-different-environments)
