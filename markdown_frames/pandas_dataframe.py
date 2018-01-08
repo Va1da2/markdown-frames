@@ -27,4 +27,4 @@ def pandas_df(markdown_table: str) -> pd.DataFrame:
     for row in table_data:
         output_table.append(tuple(map(get_python_type, zip(row, types))))
 
-    return pd.DataFrame.form_records(output_table, column_names)
+    return pd.DataFrame(output_table, columns=column_names)
