@@ -99,7 +99,7 @@ def test_spark_df(spark):
          (3, 'user4', 2.718, 333333)],
         expected_schema1)
     epxected_schema2 = StructType([
-        StructField("column1", DecimalType()),
+        StructField("column1", DoubleType()),
         StructField("column2", TimestampType()),
         StructField("column3", DoubleType()),
         StructField("column4", StringType()),

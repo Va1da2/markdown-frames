@@ -31,7 +31,6 @@ from markdown_frames.type_definitions import (
     BIG_INTEGER,
     FLOAT,
     DOUBLE,
-    DECIMAL,
     TIMESTAMP,
     )
 
@@ -70,8 +69,6 @@ def _get_spark_struct(column_names: List[str],
             return FloatType()
         elif column_type in DOUBLE:
             return DoubleType()
-        elif column_type in DECIMAL:
-            return DecimalType(38, 18)
         elif column_type in TIMESTAMP:
             return TimestampType()
         elif column_type in BIG_INTEGER:
