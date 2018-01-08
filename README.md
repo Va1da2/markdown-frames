@@ -11,31 +11,29 @@ themselves.
 
 So instead of having to define a Spark DataFrame like this:
 ```
-schema = ["column_1", "column_2"]
-input = spark.createDataFrame([(1, 'first'), (2, 'second')], schema)
+schema = ["user_id", "even_type", "item_id", "event_time", "country", "dt"]
+input_df = spark.createDataFrame([
+    (123456, 'page_view', None, "2017-12-31 23:50:50", "uk", "2017-12-31"),
+    (123456, 'item_view', 68471513, "2017-12-31 23:50:55", "uk", "2017-12-31")], 
+    schema)
 ```
 
 I want to define it as a docstring:
 ```
-input = """
-    |  column_1  |  column_2  |
-    |  integer   |   string   |
-    | ---------- | ---------- |
-    |     1      |   first    |
-    |     2      |   second   |
+input_markdown = """
+    |  user_id   |  even_type  | item_id  |    event_time       | country  |     dt      |
+    |   bigint   |   string    |  bigint  |    timestamp        |  string  |   string    |
+    | ********** | *********** | ******** | ******************* | ******** |************ |
+    |   123456   |   page_view |   NULL   | 2017-12-31 23:50:50 |   uk     | 2017-12-31  |
+    |   123456   |   item_view | 68471513 | 2017-12-31 23:50:55 |   uk     | 2017-12-31  |
     """
+
+input_df = spark_df(input_markdown, spark)
 ```
 
-## TO DO:
-
-* ~~make initial implementation of markdown table parsing (without `array` or `map`)~~
-* ~~make tests (not exaustive) for those implementations~~
-* add `array` and `map` support
-* check that all Spark data types are accounted for
-* ~~dependencies description (how to install pyspark)~~
-* make it to a package with `setup.py`
-* add PEP8 auto-checker
-
+This not only gives better view of the data that you use in unittest for yourself, but also for other people who will try to understand your code.
+Also, in this way, you can easily share test with your python (code) challenged coleagues to allow them better understand what the specific function is doing.
+In this way, these coleagues might even write you a unit test that will catch an edge case that you did not thought of. 
 
 ## Environment setup
 
