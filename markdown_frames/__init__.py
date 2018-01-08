@@ -2,4 +2,6 @@
 from markdown_frames.spark_dataframe import *
 from markdown_frames.pandas_dataframe import *
 
+from markdown_frames.version import __version__
+    
 __all__ = ["pandas_dataframe", "spark_dataframe"]

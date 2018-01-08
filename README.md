@@ -29,11 +29,7 @@ input = """
 ## TO DO:
 
 * ~~make initial implementation of markdown table parsing (without `array` or `map`)~~
-* make tests for those implementations
-    * tests for `utils.py` [+]
-    * tests for `spark_dataframe.py` [+]
-    * tests for `pandas_dataframe.py` [-] 
-* fix `DecimaType`
+* ~~make tests (not exaustive) for those implementations~~
 * add `array` and `map` support
 * check that all Spark data types are accounted for
 * ~~dependencies description (how to install pyspark)~~
