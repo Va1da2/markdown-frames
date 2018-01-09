@@ -11,7 +11,8 @@ from markdown_frames.utils import (
     get_column_names_types,
     get_data_from_table,
     get_python_type
-    )
+)
+
 
 def pandas_df(markdown_table: str) -> pd.DataFrame:
     """

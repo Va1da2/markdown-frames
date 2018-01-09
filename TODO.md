@@ -7,3 +7,4 @@
 * ~~dependencies description (how to install pyspark)~~
 * make it to a package with `setup.py` _IN PROGRESS_
 * add PEP8 auto-checker _IN PROGRESS_
+* Sphinx docs 

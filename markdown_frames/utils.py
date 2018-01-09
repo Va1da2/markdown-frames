@@ -17,7 +17,7 @@ from markdown_frames.type_definitions import (
     INTS,
     FLOATS,
     TIMESTAMP
-    )
+)
 
 
 def _make_columns(row_string: str) -> List[str]:
@@ -48,7 +48,7 @@ def get_column_names_types(table: List[List[str]]) -> List[List[str]]:
     Given a table in list of lists representation, output the lists for
     column names and column types.
     :param table: markdown table representation as list of lists (rows)
-    :return: list of lists representaion of data in provided table 
+    :return: list of lists representaion of data in provided table
     """
     column_names = table[0]
     # Check if types are provided?

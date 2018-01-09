@@ -9,7 +9,6 @@ from pyspark.sql.types import (
     IntegerType,
     FloatType,
     DoubleType,
-    DecimalType,
     LongType,
     TimestampType,
     StringType,
@@ -24,7 +23,7 @@ from markdown_frames.utils import (
     get_column_names_types,
     get_data_from_table,
     get_python_type
-    )
+)
 from markdown_frames.type_definitions import (
     STRING,
     INTEGER,
@@ -32,7 +31,7 @@ from markdown_frames.type_definitions import (
     FLOAT,
     DOUBLE,
     TIMESTAMP,
-    )
+)
 
 
 def spark_df(markdown_table: str, spark: SparkSession) -> DataFrame:

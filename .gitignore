@@ -3,3 +3,5 @@
 **derby.log
 **/.ipynb_checkpoints/
 **.cache
+.coverage
+**htmlcov
