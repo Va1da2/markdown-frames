@@ -28,8 +28,7 @@ def _make_columns(row_string: str) -> List[str]:
         input table
     :return: list of formated values in the table row
     """
-    cleaned_row = row_string.strip()
-    row_values = filter(lambda s: s.strip() != '', cleaned_row.split('|'))
+    row_values = filter(lambda s: s.strip() != '', row_string.split('|'))
     return list(map(lambda s: s.strip().lower(), row_values))
 
 def make_table(markdown_table: str) -> List[List[str]]:
