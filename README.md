@@ -35,6 +35,9 @@ This not only gives better view of the data that you use in unittest for yoursel
 Also, in this way, you can easily share test with your python (code) challenged coleagues to allow them better understand what the specific function is doing.
 In this way, these coleagues might even write you a unit test that will catch an edge case that you did not thought of. 
 
+
+If you want to see how they are used, head to the `examples` folder.
+
 ## Environment setup
 
 Please refer to the manual [here](ENVIRONMENT_SETUP.md)

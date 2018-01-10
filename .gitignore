@@ -5,3 +5,4 @@
 **.cache
 .coverage
 **htmlcov
+markdown_frames.egg-info
