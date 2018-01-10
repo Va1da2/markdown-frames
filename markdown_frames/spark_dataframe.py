@@ -10,13 +10,16 @@ from pyspark.sql.types import (
     FloatType,
     DoubleType,
     LongType,
+    ShortType,
     TimestampType,
     StringType,
+    ArrayType,
+    MapType,
     StructType,
     StructField
 )
 
-from typing import List
+from typing import List, Union, Any
 
 from markdown_frames.utils import (
     make_table,
@@ -28,6 +31,7 @@ from markdown_frames.type_definitions import (
     STRING,
     INTEGER,
     BIG_INTEGER,
+    SMALL_INTEGER,
     FLOAT,
     DOUBLE,
     TIMESTAMP,
@@ -61,23 +65,79 @@ def _get_spark_struct(column_names: List[str],
     :param columns_types: column types in list
     :returns: StructType.
     """
-    def types_mapping(column_type):
-        if column_type in INTEGER:
-            return IntegerType()
-        elif column_type in FLOAT:
-            return FloatType()
-        elif column_type in DOUBLE:
-            return DoubleType()
-        elif column_type in TIMESTAMP:
-            return TimestampType()
-        elif column_type in BIG_INTEGER:
-            return LongType()
-        elif column_type in STRING:
-            return StringType()
-
     def struct_field(name_type):
-        return StructField(name_type[0], types_mapping(name_type[1]))
+        return StructField(name_type[0], _types_mapping(name_type[1]))
 
     spark_structs = map(struct_field, zip(column_names, column_types))
 
     return StructType(list(spark_structs))
+
+def _types_mapping(column_type: str) -> Any:
+    if column_type in INTEGER:
+        return IntegerType()
+    elif column_type in FLOAT:
+        return FloatType()
+    elif column_type in DOUBLE:
+        return DoubleType()
+    elif column_type in TIMESTAMP:
+        return TimestampType()
+    elif column_type in BIG_INTEGER:
+        return LongType()
+    elif column_type in SMALL_INTEGER:
+        return ShortType()
+    elif column_type in STRING:
+        return StringType()
+    elif _is_map_type(column_type):
+        return _map_type(column_type)
+    elif _is_array_type(column_type):
+        return _array_type(column_type)
+
+def _is_map_type(column_type: str) -> bool:
+    """
+    Given column_type string returns boolean value
+    if given string is for MapType.
+    :param column_type: string description of 
+        column type
+    :return: boolean - MapType or not.
+    """
+    if column_type.find("map<") == -1:
+        return False
+    else:
+        return True
+
+def _map_type(column_type: str) -> MapType:
+    """
+    Given column_type string returns MapType
+    with the correct (key, value) types.
+    :param column_type: string description of
+        column_type.
+    :returns: MapType
+    """
+    key, value = list(map(lambda x: x.strip(), column_type[4:-1].split(',')))
+
+    return MapType(_types_mapping(key), _types_mapping(value))
+
+def _is_array_type(column_type: str) -> bool:
+    """
+    Given column_type string returns boolean value
+    if given string is for ArrayType.
+    :param column_type: string description of 
+        column type
+    :return: boolean - ArrayTaype or not.
+    """
+    if column_type.find("array<") == -1:
+        return False
+    else:
+        return True
+
+def _array_type(column_type: str) -> ArrayType:
+    """
+    Given column_type string returns ArrayType
+    with the correct inside item type.
+    :param column_type: string description of
+        column_type.
+    :returns: ArrayType
+    """
+    inside = column_type[6:-1].strip()
+
+    return ArrayType(_types_mapping(inside))
