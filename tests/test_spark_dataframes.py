@@ -215,7 +215,7 @@ def test__get_spark_struct():
     input_column_names = ["column1", "column2", "column3", "column4"]
     input_column_types1 = ["int", "float", "integer", "bigint"]
     input_column_types2 = ["decimal", "str", "timestamp", "double"]
-    input_column_types3 = ["map<string, array<int>>", "double", "str", "array<array<float>>"]
+    input_column_types3 = ["map<string, array<int>>", "short", "str", "array<array<float>>"]
 
     expected_output1 = StructType([
         StructField("column1", IntegerType()),
@@ -232,7 +232,7 @@ def test__get_spark_struct():
 
     expected_output3 = StructType([
         StructField("column1", MapType(StringType(), ArrayType(IntegerType()))),
-        StructField("column2", DoubleType()),
+        StructField("column2", ShortType()),
         StructField("column3", StringType()),
         StructField("column4", ArrayType(ArrayType(FloatType())))
         ])
