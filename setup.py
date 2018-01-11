@@ -4,6 +4,7 @@ import os
 import sys
 from setuptools import find_packages
 from setuptools import setup
+from markdown_frames import __version__
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -18,9 +19,11 @@ if sys.version_info < (3, 5,):
     install_requires.append('scandir')
     install_requires.append('typing')
 
+version = __version__
+
 setup(
     name='markdown_frames',
-    version='0.1.0',
+    version=version,
     packages=find_packages(exclude=('tests', 'docs',)),
 
     author='Vaidas Armonas',
