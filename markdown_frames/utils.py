@@ -49,10 +49,8 @@ def get_column_names_types(table: List[List[str]]) -> List[List[str]]:
     :param table: markdown table representation as list of lists (rows)
     :return: list of lists representaion of data in provided table
     """
-    column_names = table[0]
     # Check if types are provided?
-    types = table[1]
-
+    column_names, types = table[:2]
     return [column_names, types]
 
 def get_data_from_table(table: List[List[str]]) -> List[List[str]]:
