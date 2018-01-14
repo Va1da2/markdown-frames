@@ -8,6 +8,7 @@ from markdown_frames.utils import (
     get_column_names_types,
     get_data_from_table,
     get_python_type,
+    get_array_inside_type
     )
 
 
@@ -217,3 +218,24 @@ def test_get_python_type():
     assert output6 == expected6
     assert output7 == expected7
     assert output8 == expected8
+
+def test_get_array_type():
+    """
+    Test fucntion that given array type string pattern
+    extract inside type
+    """
+    input1 = "array<int>"
+    input2 = "array<int >"
+    input3 = "array<array<str>>"
+
+    expected1 = "int"
+    expected2 = "int"
+    expected3 = "array<str>"
+
+    output1 = get_array_inside_type(input1)
+    output2 = get_array_inside_type(input2)
+    output3 = get_array_inside_type(input3)
+
+    assert output1 == expected1
+    assert output2 == expected2
+    assert output3 == expected3

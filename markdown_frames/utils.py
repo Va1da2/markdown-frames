@@ -10,6 +10,7 @@ Functions provided:
 from typing import List, Any, Optional
 from datetime import datetime
 from ast import literal_eval
+import re
 
 from markdown_frames.type_definitions import (
     NULL,
@@ -92,3 +93,16 @@ def get_python_type(value_type: List[str]) -> Optional[Any]:
             return literal_eval(value)
     else:
         return None
+
+def get_array_inside_type(column_type: str) -> str:
+    """
+    Given column_type string, extract
+    array inside pattern using regex.
+    :param column_type: string description of
+        column_type.
+    :returns: Str
+    """
+    matchObj = re.match("array\<(.*)\>", column_type)
+    if matchObj:
+        return matchObj.group(1).strip()
+    return None
