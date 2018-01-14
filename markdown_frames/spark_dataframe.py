@@ -25,7 +25,8 @@ from markdown_frames.utils import (
     make_table,
     get_column_names_types,
     get_data_from_table,
-    get_python_type
+    get_python_type,
+    get_array_inside_type
 )
 from markdown_frames.type_definitions import (
     STRING,
@@ -138,6 +139,6 @@ def _array_type(column_type: str) -> ArrayType:
         column_type.
     :returns: ArrayType
     """
-    inside = column_type[6:-1].strip()
+    inside = get_array_inside_type(column_type)
 
     return ArrayType(_types_mapping(inside))
